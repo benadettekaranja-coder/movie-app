@@ -27,10 +27,10 @@ export default function Home() {
   }, [searchQuery, page]);
 
   return (
-    <main>
+    <main className="min-h-screen bg-zinc-950 text-white">
       <Header />
       <SearchBar onSearch={setSearchQuery} />
-      <h1 className="text-2xl font-bold p-4">
+      <h1 className="text-2xl font-bold p-4 text-white">
         {searchQuery ? "Search Results" : "Popular Movies"}
       </h1>
       <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
@@ -51,25 +51,25 @@ export default function Home() {
           )
         )}
       </ul>
-      <div className="flex justify-center gap-4 p-4">
-        <button
-          onClick={() => setPage((p) => Math.max(1, p - 1))}
-          disabled={page === 1}
-          className="px-4 py-2 bg-zinc-800 text-white rounded disabled:opacity-50"
-        >
-          Previous
-        </button>
-        <span className="flex items-center text-white">
-          Page {page} of {totalPages}
-        </span>
-        <button
-          onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-          disabled={page === totalPages}
-          className="px-4 py-2 bg-zinc-800 text-white rounded disabled:opacity-50"
-        >
-          Next
-        </button>
-      </div>
+      <div className="flex justify-center gap-3 p-6">
+  <button
+    onClick={() => setPage((p) => Math.max(1, p - 1))}
+    disabled={page === 1}
+    className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+  >
+    ← Previous
+  </button>
+  <span className="flex items-center text-white text-sm bg-zinc-800 px-4 py-2 rounded-lg">
+    Page {page} of {totalPages}
+  </span>
+  <button
+    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+    disabled={page === totalPages}
+    className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+  >
+    Next →
+  </button>
+</div>
     </main>
   );
 }

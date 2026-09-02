@@ -12,16 +12,21 @@ export default function SearchBar({ onSearch }: { onSearch: (q: string) => void 
 
   return (
     <form onSubmit={handleSubmit} className="p-4">
-      <input
-        type="text"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="search movie.."
-        className="border rounded px-3 py-2 w-full max-w-md"
-      />
-      <button type="submit" className="ml-2 bg-blue-600 text-white px-4 py-2 rounded">
-        search
-      </button>
-    </form>
+  <div className="flex justify-center">
+    <input
+      type="text"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      placeholder="Search movies..."
+      className="border rounded-l-full px-4 py-3 w-full max-w-md text-black placeholder-gray-400"
+    />
+    <button
+      type="submit"
+      className="bg-blue-600 text-white px-6 py-3 rounded-r-full hover:bg-blue-700"
+    >
+      Search
+    </button>
+  </div>
+</form>
   );
 }
