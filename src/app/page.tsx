@@ -1,75 +1,91 @@
-"use client";
-
-import { useState, useEffect } from "react";
-import MovieCard from "./components/MovieCard";
 import Header from "./components/Header";
 import SearchBar from "./components/SearchBar";
+import GenreBar from "./components/GenreBar";
+import HeroCarousel from "./components/HeroCarousel";
+import MovieCard from "./components/MovieCard";
+import Pagination from "./components/Pagination";
+import {
+  discoverByGenre,
+  getGenres,
+  getPopular,
+  getTrending,
+  searchMovies,
+} from "@/lib/tmdb";
 
-const TMDB_API_KEY = process.env.NEXT_PUBLIC_TMDB_API_KEY;
+const MAX_PAGES = 500;
 
-export default function Home() {
-  const [movies, setMovies] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(1);
+export default async function Home({
+  searchParams,
+}: {
+  searchParams: Promise<{ q?: string; page?: string; genre?: string }>;
+}) {
+  const { q, page: pageParam, genre: genreParam } = await searchParams;
 
-  useEffect(() => {
-    const url = searchQuery
-      ? `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${searchQuery}&page=${page}`
-      : `https://api.themoviedb.org/3/movie/popular?api_key=${TMDB_API_KEY}&page=${page}`;
+  const query = (q ?? "").trim();
+  const genreId = genreParam ? Number(genreParam) : undefined;
+  const page = Math.max(1, Number(pageParam ?? "1") || 1);
 
-    fetch(url)
-      .then((res) => res.json())
-      .then((data) => {
-        setMovies(data.results);
-        setTotalPages(data.total_pages);
-      });
-  }, [searchQuery, page]);
+  const genres = await getGenres();
+
+  const list = query
+    ? await searchMovies(query, page)
+    : genreId
+      ? await discoverByGenre(genreId, page)
+      : await getPopular(page);
+
+  const isDefaultView = !query && !genreId && page === 1;
+  const trending = isDefaultView ? await getTrending() : null;
+
+  const totalPages = Math.min(Math.max(list.total_pages, 1), MAX_PAGES);
+  const activeGenre = genres.find((genre) => genre.id === genreId);
+
+  const heading = query
+    ? `Results for “${query}”`
+    : activeGenre
+      ? activeGenre.name
+      : "Popular Movies";
 
   return (
     <main className="min-h-screen bg-zinc-950 text-white">
       <Header />
-      <SearchBar onSearch={setSearchQuery} />
-      <h1 className="text-2xl font-bold p-4 text-white">
-        {searchQuery ? "Search Results" : "Popular Movies"}
-      </h1>
-      <ul className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 p-4">
-        {movies.map(
-          (movie: {
-            id: number;
-            title: string;
-            poster_path: string;
-            vote_average: number;
-          }) => (
-            <li key={movie.id}>
-              <MovieCard
-                title={movie.title}
-                posterPath={movie.poster_path}
-                rating={movie.vote_average}
-              />
-            </li>
-          )
+      {trending && (
+        <HeroCarousel movies={trending.results.slice(0, 6)} genres={genres} />
+      )}
+
+      <SearchBar initialQuery={query} />
+      <GenreBar genres={genres} activeGenre={genreId} />
+
+      <div className="mx-auto max-w-6xl">
+        <h2 className="px-4 pt-2 text-xl font-semibold">{heading}</h2>
+
+        {list.results.length === 0 ? (
+          <p className="px-4 py-16 text-center text-zinc-400">
+            No movies found. Try a different search or genre.
+          </p>
+        ) : (
+          <ul className="grid grid-cols-2 gap-4 p-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {list.results.map((movie) => (
+              <li key={movie.id}>
+                <MovieCard
+                  id={movie.id}
+                  title={movie.title}
+                  posterPath={movie.poster_path}
+                  rating={movie.vote_average}
+                />
+              </li>
+            ))}
+          </ul>
         )}
-      </ul>
-      <div className="flex justify-center gap-3 p-6">
-  <button
-    onClick={() => setPage((p) => Math.max(1, p - 1))}
-    disabled={page === 1}
-    className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-  >
-    ← Previous
-  </button>
-  <span className="flex items-center text-white text-sm bg-zinc-800 px-4 py-2 rounded-lg">
-    Page {page} of {totalPages}
-  </span>
-  <button
-    onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
-    disabled={page === totalPages}
-    className="px-5 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
-  >
-    Next →
-  </button>
-</div>
+
+        <Pagination
+          page={page}
+          totalPages={totalPages}
+          params={{
+            q: query || undefined,
+            genre: genreId ? String(genreId) : undefined,
+          }}
+        />
+      </div>
     </main>
   );
 }
