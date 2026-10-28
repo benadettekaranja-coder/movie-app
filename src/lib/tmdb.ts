@@ -43,7 +43,10 @@ async function tmdb<T>(
   }
 
   const res = await fetch(url, {
-    headers: { Authorization: `Bearer ${TOKEN}`, accept: "application/json" },
+    headers: {
+      Authorization: 'Bearer ' + TOKEN,
+      accept: "application/json",
+    },
     next: { revalidate: 3600 },
   });
 
@@ -81,12 +84,14 @@ export function getMovie(id: number | string) {
 }
 
 export async function getTrailer(id: number | string): Promise<Video | null> {
-  const data = await tmdb<{ results: Video[] }>(`/movie/${id}/videos`);
-  return (
-    data.results.find(
-      (video) => video.site === "YouTube" && video.type === "Trailer"
-    ) ??
-    data.results.find((video) => video.site === "YouTube") ??
-    null
-  );
+  try {
+    const data = await tmdb<{ results: Video[] }>(`/movie/${id}/videos`);
+    return (
+      data.results.find(
+        (video) => video.site === "YouTube" && video.type === "Trailer"
+      ) ?? null
+    );
+  } catch {
+    return null;
+  }
 }

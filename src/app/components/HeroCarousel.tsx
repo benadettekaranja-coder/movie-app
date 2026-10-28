@@ -37,7 +37,7 @@ export default function HeroCarousel({
       onMouseLeave={() => setPaused(false)}
       onFocus={() => setPaused(true)}
       onBlur={() => setPaused(false)}
-      className="relative h-[70vh] min-h-[420px] max-h-[640px] w-full overflow-hidden"
+      className="relative h-[78vh] min-h-[520px] max-h-[760px] w-full overflow-hidden"
     >
       {movies.map((item, position) => (
         <div
@@ -80,23 +80,25 @@ export default function HeroCarousel({
           {movie.overview}
         </p>
 
-        <div className="mt-2 flex items-center gap-3">
+        <div className="mt-4 flex items-center gap-3">
+          <Link
+            href={`/movie/${movie.id}#trailer`}
+            className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-all hover:scale-[1.03] hover:bg-zinc-100"
+          >
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="currentColor" className="h-4 w-4">
+              <path d="M5.5 3.2v13.6a1 1 0 0 0 1.55.83l9.8-6.8a1 1 0 0 0 0-1.66l-9.8-6.8a1 1 0 0 0-1.55.83Z" />
+            </svg>
+            Play
+          </Link>
           <Link
             href={`/movie/${movie.id}`}
-            className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
+            className="flex items-center gap-2 rounded-full border border-white/20 bg-white/15 px-5 py-2.5 text-sm font-semibold text-white backdrop-blur-md transition-all hover:bg-white/25"
           >
-            <svg
-              aria-hidden="true"
-              viewBox="0 0 20 20"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              className="h-4 w-4"
-            >
+            <svg aria-hidden="true" viewBox="0 0 20 20" fill="none" stroke="currentColor" strokeWidth="1.8" className="h-4 w-4">
               <circle cx="10" cy="10" r="7.5" />
               <path d="M10 9v4.5M10 6.5h.01" strokeLinecap="round" />
             </svg>
-            More info
+            More Info
           </Link>
         </div>
       </div>

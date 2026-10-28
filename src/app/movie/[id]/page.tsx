@@ -51,6 +51,21 @@ export default async function MoviePage({
           ← Back to movies
         </Link>
 
+        {trailer && (
+          <div id="trailer" className="mb-8 overflow-hidden rounded-xl bg-black shadow-2xl scroll-mt-28">
+            <div className="aspect-video w-full">
+              <iframe
+                src={`https://www.youtube.com/embed/${trailer.key}`}
+                title={`${movie.title} trailer`}
+                className="h-full w-full border-0"
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                loading="lazy"
+              />
+            </div>
+          </div>
+        )}
+
         <div className="mt-4 flex flex-col gap-6 sm:flex-row">
           {movie.poster_path && (
             <img
@@ -95,25 +110,6 @@ export default async function MoviePage({
             </p>
 
             <div className="mt-6 flex flex-wrap items-center gap-3">
-              {trailer && (
-                <a
-                  href={`https://www.youtube.com/watch?v=${trailer.key}`}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-black transition-colors hover:bg-zinc-200"
-                >
-                  <svg
-                    aria-hidden="true"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                    className="h-4 w-4"
-                  >
-                    <path d="M6 4.5v11l9-5.5-9-5.5z" />
-                  </svg>
-                  Watch trailer
-                </a>
-              )}
-
               <a
                 href={`https://www.themoviedb.org/movie/${movie.id}`}
                 target="_blank"

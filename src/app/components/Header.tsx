@@ -38,7 +38,7 @@ export default function Header() {
   }, []);
 
   return (
-    <header className="sticky top-0 z-50 px-4 pt-4">
+    <header className="absolute left-0 right-0 top-0 z-50 px-4 pt-4 sm:px-6">
       <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 rounded-full border border-white/10 bg-zinc-900/70 px-4 py-2 shadow-lg backdrop-blur-md">
         <Link href="/" className="flex items-center gap-2">
           <span className="text-xl">🎬</span>
@@ -96,19 +96,33 @@ export default function Header() {
                 className="absolute right-0 mt-2 w-60 overflow-hidden rounded-xl border border-white/10 bg-zinc-900/90 p-2 shadow-2xl backdrop-blur-md"
               >
                 <div className="px-3 py-2">
-                  <p className="truncate text-sm font-medium text-white">
-                    {user?.name}
-                  </p>
-                  <p className="truncate text-xs text-zinc-400">{user?.email}</p>
+                  {user ? (
+                    <>
+                      <p className="truncate text-sm font-medium text-white">{user.name}</p>
+                      <p className="truncate text-xs text-zinc-400">{user.email}</p>
+                    </>
+                  ) : (
+                    <p className="text-sm text-zinc-300">Discover without signing in</p>
+                  )}
                 </div>
                 <div className="my-1 h-px bg-white/10" />
-                <button
-                  role="menuitem"
-                  onClick={() => signOut({ callbackUrl: "/signin" })}
-                  className="w-full rounded-lg border border-white/20 px-3 py-2 text-left text-sm text-white transition-all hover:border-transparent hover:bg-red-600/80"
-                >
-                  Sign out
-                </button>
+                {user ? (
+                  <button
+                    role="menuitem"
+                    onClick={() => signOut({ callbackUrl: "/signin" })}
+                    className="w-full rounded-lg border border-white/20 px-3 py-2 text-left text-sm text-white transition-all hover:border-transparent hover:bg-red-600/80"
+                  >
+                    Sign out
+                  </button>
+                ) : (
+                  <Link
+                    role="menuitem"
+                    href="/signin"
+                    className="block w-full rounded-lg bg-white px-3 py-2 text-center text-sm font-semibold text-black"
+                  >
+                    Sign in
+                  </Link>
+                )}
               </div>
             )}
           </div>

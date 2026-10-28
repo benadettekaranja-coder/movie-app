@@ -19,9 +19,10 @@ export default function Pagination({
     return query ? `/?${query}` : "/";
   };
 
-  const button = "rounded-lg px-5 py-2 transition-colors";
-  const enabled = "bg-blue-600 text-white hover:bg-blue-700";
-  const disabled = "bg-zinc-800 text-zinc-500 pointer-events-none";
+  const button =
+    "rounded-lg border border-white/10 bg-white/10 px-5 py-2 text-white backdrop-blur-md transition-colors hover:bg-white/20";
+  const enabled = "text-white";
+  const disabled = "pointer-events-none text-white/40 opacity-60";
 
   return (
     <div className="flex items-center justify-center gap-3 p-6">
@@ -32,7 +33,7 @@ export default function Pagination({
       >
         ← Previous
       </Link>
-      <span className="rounded-lg bg-zinc-800 px-4 py-2 text-sm text-white">
+      <span className="rounded-lg border border-white/10 bg-white/10 px-4 py-2 text-sm text-white backdrop-blur-md">
         Page {page} of {totalPages}
       </span>
       <Link

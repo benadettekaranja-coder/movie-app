@@ -22,11 +22,11 @@ export default function SearchBar({ initialQuery = "" }: { initialQuery?: string
           onChange={(event) => setQuery(event.target.value)}
           placeholder="Search movies..."
           aria-label="Search movies"
-          className="w-full rounded-l-full border border-r-0 border-zinc-700 bg-zinc-900 px-5 py-3 text-white placeholder-zinc-500 outline-none focus:border-zinc-500"
+          className="w-full rounded-l-full border border-r-0 border-white/20 bg-white/10 px-5 py-3 text-white backdrop-blur-md placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-white/30"
         />
         <button
           type="submit"
-          className="rounded-r-full bg-blue-600 px-6 py-3 font-medium text-white transition-colors hover:bg-blue-700"
+          className="rounded-r-full border border-white/20 bg-white/10 px-6 py-3 font-medium text-white backdrop-blur-md transition-colors hover:bg-white/20 focus:outline-none focus:ring-2 focus:ring-white/30"
         >
           Search
         </button>
